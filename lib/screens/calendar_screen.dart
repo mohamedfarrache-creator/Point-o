@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../models/time_log.dart';
+import '../models/pay_period.dart';
 import '../providers/attendance_provider.dart';
 import '../utils/formatters.dart';
 
@@ -18,9 +19,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     final attendance = context.watch<AttendanceProvider>();
-    final logs = attendance.logsForMonth(_focusedDay);
-    final normal = attendance.normalMinutesForMonth(_focusedDay);
-    final overtime = attendance.overtimeMinutesForMonth(_focusedDay);
+    final period = PayPeriod.forMonth(_focusedDay);
+    final logs = attendance.logsForPayPeriod(_focusedDay);
+    final normal = attendance.normalMinutesForPayPeriod(_focusedDay);
+    final overtime = attendance.overtimeMinutesForPayPeriod(_focusedDay);
     return ListView(padding: const EdgeInsets.all(16), children: [
       Card(
         child: Padding(
@@ -50,7 +52,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       ),
       const SizedBox(height: 18),
       Card(child: Padding(padding: const EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(monthLabel(_focusedDay), style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+        Text('Période du ${period.start.day}/${period.start.month} au ${period.end.day}/${period.end.month}/${period.end.year}', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
         const SizedBox(height: 16),
         _line('Jours travaillés', '${logs.length}'),
         _line('Heures normales', hoursMinutes(normal)),

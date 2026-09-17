@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'calendar_screen.dart';
 import 'dashboard_screen.dart';
 import 'history_screen.dart';
+import 'payslip_screen.dart';
 import 'settings_screen.dart';
 
 class HomeShell extends StatefulWidget {
@@ -13,8 +14,8 @@ class HomeShell extends StatefulWidget {
 
 class _HomeShellState extends State<HomeShell> {
   int _index = 0;
-  final _screens = const [DashboardScreen(), CalendarScreen(), HistoryScreen(), SettingsScreen()];
-  final _labels = const ['Accueil', 'Calendrier', 'Historique', 'Profil'];
+  final _screens = const [DashboardScreen(), CalendarScreen(), HistoryScreen(), PayslipScreen(), SettingsScreen()];
+  final _labels = const ['Accueil', 'Calendrier', 'Historique', 'Paie', 'Profil'];
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -32,6 +33,7 @@ class _HomeShellState extends State<HomeShell> {
             NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: 'Accueil'),
             NavigationDestination(icon: Icon(Icons.calendar_month_outlined), selectedIcon: Icon(Icons.calendar_month), label: 'Calendrier'),
             NavigationDestination(icon: Icon(Icons.history_outlined), selectedIcon: Icon(Icons.history), label: 'Historique'),
+            NavigationDestination(icon: Icon(Icons.receipt_long_outlined), selectedIcon: Icon(Icons.receipt_long), label: 'Paie'),
             NavigationDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: 'Profil'),
           ],
         ),

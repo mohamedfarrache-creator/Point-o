@@ -2,6 +2,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../models/time_log.dart';
+import '../models/pay_period.dart';
 
 /// Single SQLite gateway for logs and user preferences.
 class DatabaseHelper {
@@ -52,6 +53,17 @@ class DatabaseHelper {
       whereArgs: [start.toIso8601String(), end.toIso8601String()],
       orderBy: 'check_in DESC',
     );
+    return rows.map(TimeLog.fromMap).toList();
+  }
+
+  /// Database equivalent of the in-memory payroll aggregation.
+  Future<List<TimeLog>> logsForPayPeriod(DateTime reference) async {
+    final period = PayPeriod.forMonth(reference);
+    final db = await database;
+    final rows = await db.query('time_logs',
+      where: 'date >= ? AND date <= ?',
+      whereArgs: [period.start.toIso8601String(), DateTime(period.end.year, period.end.month, period.end.day).toIso8601String()],
+      orderBy: 'check_in DESC');
     return rows.map(TimeLog.fromMap).toList();
   }
 

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'data/database_helper.dart';
 import 'providers/attendance_provider.dart';
+import 'providers/salary_provider.dart';
 import 'screens/home_shell.dart';
 
 Future<void> main() async {
@@ -16,8 +17,11 @@ class PointeoApp extends StatelessWidget {
   const PointeoApp({super.key});
 
   @override
-  Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (_) => AttendanceProvider(DatabaseHelper.instance)..initialize(),
+  Widget build(BuildContext context) => MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => AttendanceProvider(DatabaseHelper.instance)..initialize()),
+          ChangeNotifierProvider(create: (_) => SalaryProvider()..initialize()),
+        ],
         child: MaterialApp(
           title: 'Pointéo',
           debugShowCheckedModeBanner: false,

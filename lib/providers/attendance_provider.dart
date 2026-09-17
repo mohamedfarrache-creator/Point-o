@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 
 import '../data/database_helper.dart';
 import '../models/time_log.dart';
+import '../models/pay_period.dart';
 
 class AttendanceProvider extends ChangeNotifier {
   AttendanceProvider(this._database);
@@ -74,9 +75,13 @@ class AttendanceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<TimeLog> logsForMonth(DateTime month) => _logs.where((log) => log.date.year == month.year && log.date.month == month.month).toList();
-  int normalMinutesForMonth(DateTime month) => logsForMonth(month).fold(0, (sum, log) => sum + normalFor(log));
-  int overtimeMinutesForMonth(DateTime month) => logsForMonth(month).fold(0, (sum, log) => sum + overtimeFor(log));
+  /// All aggregates use the company 26–25 pay cycle, never calendar months.
+  List<TimeLog> logsForPayPeriod(DateTime reference) {
+    final period = PayPeriod.forMonth(reference);
+    return _logs.where((log) => period.includes(log.date)).toList();
+  }
+  int normalMinutesForPayPeriod(DateTime reference) => logsForPayPeriod(reference).fold(0, (sum, log) => sum + normalFor(log));
+  int overtimeMinutesForPayPeriod(DateTime reference) => logsForPayPeriod(reference).fold(0, (sum, log) => sum + overtimeFor(log));
 
   static DateTime _day(DateTime value) => DateTime(value.year, value.month, value.day);
   static bool _sameDay(DateTime a, DateTime b) => a.year == b.year && a.month == b.month && a.day == b.day;
